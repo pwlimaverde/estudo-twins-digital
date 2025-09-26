@@ -1,0 +1,53 @@
+[project]
+name = "estudo-twins-digital"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "pwlimaverde", email = "pwlimaverde@gmail.com" }
+]
+requires-python = ">=3.13"
+dependencies = [
+    "py-return-success-or-error>=0.6.1",
+    "python-dotenv>=1.1.1",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[dependency-groups]
+dev = [
+    "autopep8>=1.6.0",
+    "blue>=0.9.1",
+    "isort>=6.0.1",
+    "pytest>=8.4.2",
+    "pytest-cov>=7.0.0",
+    "rich>=14.1.0",
+    "ruff>=0.13.2",
+    "taskipy>=1.14.1",
+]
+doc = [
+    "mkdocs>=1.6.1",
+    "mkdocs-material>=9.6.20",
+    "mkdocstrings>=0.30.1",
+    "mkdocstrings-python>=1.18.2",
+]
+
+[tool.autopep8]
+max-line-length = 79
+aggressive = 3
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+trailing_comma = true
+force_grid_wrap = 0
+use_parentheses = true
+line_length = 79
+
+[tool.ruff]
+exclude = ["__init__.py"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/estudo_twins_digital"]
