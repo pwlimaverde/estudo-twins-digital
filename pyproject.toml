@@ -8,6 +8,7 @@ authors = [
 ]
 requires-python = ">=3.13"
 dependencies = [
+    "ipykernel>=6.30.1",
     "numpy>=2.3.3",
     "pandas>=2.3.2",
     "py-return-success-or-error>=0.6.1",
