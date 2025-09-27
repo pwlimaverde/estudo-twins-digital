@@ -8,8 +8,12 @@ authors = [
 ]
 requires-python = ">=3.13"
 dependencies = [
+    "numpy>=2.3.3",
+    "pandas>=2.3.2",
     "py-return-success-or-error>=0.6.1",
     "python-dotenv>=1.1.1",
+    "scikit-learn>=1.7.2",
+    "taskipy>=1.14.1",
 ]
 
 [build-system]
@@ -17,16 +21,20 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [dependency-groups]
+# Grupo de desenvolvimento: padronizado para usar Ruff como formatter e linter.
+# Ferramentas conflitantes removidas: autopep8, blue e isort.
+# Mantidos pytest/coverage, rich e task runner.
 dev = [
-    "autopep8>=1.6.0",
-    "blue>=0.9.1",
-    "isort>=6.0.1",
     "pytest>=8.4.2",
     "pytest-cov>=7.0.0",
     "rich>=14.1.0",
     "ruff>=0.13.2",
     "taskipy>=1.14.1",
+    "pyright>=1.1.405",
 ]
+
+# Dependências de documentação mantidas
+# (mkdocs + material + mkdocstrings para gerar docs a partir dos docstrings)
 doc = [
     "mkdocs>=1.6.1",
     "mkdocs-material>=9.6.20",
@@ -34,20 +42,54 @@ doc = [
     "mkdocstrings-python>=1.18.2",
 ]
 
-[tool.autopep8]
-max-line-length = 79
-aggressive = 3
-
-[tool.isort]
-profile = "black"
-multi_line_output = 3
-trailing_comma = true
-force_grid_wrap = 0
-use_parentheses = true
-line_length = 79
-
+# Configuração do Ruff unificando lint + format, removendo a necessidade de
+# autopep8/blue/isort. Alvo ajustado para Python 3.13 e largura de linha 79.
 [tool.ruff]
-exclude = ["__init__.py"]
+target-version = "py313"
+line-length = 79
+
+[tool.ruff.lint]
+# Conjunto de regras equilibrado: erros básicos, pyflakes, ordenação de imports,
+# upgrades de sintaxe, boas práticas e simplificações.
+select = ["E", "F", "I", "UP", "B", "SIM", "C4"]
+# Para aplicar correções, use a flag de CLI: `ruff check --fix`.
+
+[tool.ruff.format]
+# Estilo "Black-like" com quebras controladas pelo line-length acima.
+quote-style = "double"
+indent-style = "space"
+line-ending = "auto"
+skip-magic-trailing-comma = false
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/estudo_twins_digital"]
+include = ["src/estudo_twins_digital/py.typed"]
+
+[tool.pyright]
+# Verificação de tipos em modo estrito no CLI
+typeCheckingMode = "strict"
+# Incluir src e tests na análise
+include = ["src", "tests"]
+# Excluir migrations da análise para reduzir ruído
+exclude = [
+  "**/migrations/**",
+  ".venv",
+  "build",
+  "dist",
+  "site",
+  ".git",
+]
+extraPaths = ["src"]
+reportMissingTypeArgument = "error"
+reportMissingTypeStubs = false
+strictParameterNoneValue = true
+reportUnknownVariableType = "warning"  
+# Reduz para warning ao invés de error
+reportUnknownMemberType = "warning"
+# Alinha com a versão de Python do projeto
+pythonVersion = "3.13"
+
+[tool.taskipy.tasks]
+# Scripts de automação
+base = "python scripts/new_feature_script.py --type base"
+call-data = "python scripts/new_feature_script.py --type call_data"
